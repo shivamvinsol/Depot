@@ -1,6 +1,16 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
+  # def who_bought
+  #   @product = Product.find(params[:id])
+  #   @latest_order = @product.orders.order(:updated_at).last
+  #   if stale?(@latest_order)
+  #     respond_to do |format|
+  #       format.atom
+  #     end
+  #   end
+  # end
+
   # GET /products
   # GET /products.json
   def index
@@ -54,10 +64,15 @@ class ProductsController < ApplicationController
   # DELETE /products/1
   # DELETE /products/1.json
   def destroy
-    @product.destroy
+
     respond_to do |format|
-      format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
+      if @product.destroy
+        format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to products_url, notice: 'Product has line items.' }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -69,6 +84,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:title, :description, :image_url, :price)
+      params.require(:product).permit(:title, :description, :image_url, :price, :discount_price, :enabled, :permalink)
     end
 end
