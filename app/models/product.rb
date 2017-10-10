@@ -9,8 +9,6 @@ end
 class Product < ApplicationRecord
   has_many :line_items, dependent: :restrict_with_error
   has_many :carts, through: :line_items
-  # has_and_belongs_to_many :carts
-  # before_destroy :ensure_not_referenced_by_any_line_item
   before_validation :set_title, :set_discount_price
 
 
@@ -21,26 +19,17 @@ class Product < ApplicationRecord
   validates :image_url, url: true, allow_blank: true
   validates :description, length: { in: 5..10 }, allow_blank: true
   validate :price,  :ensure_price_greater_than_dicount_price
+  validates :discount_price, numericality: true, allow_blank: true
   validates :permalink, uniqueness: true, format: {
     with: /\A(([a-z0-9])+-){2,}([a-z0-9])+\Z/i
   }
-  validates :discount_price, numericality: true, allow_blank: true
+
 
   def self.latest
     Product.order(:updated_at).last
   end
 
   private
-    def ensure_not_referenced_by_any_line_item
-      byebug
-      if line_items.empty?
-        return true
-      else
-        errors.add(:base, 'Line Items present')
-        return false
-      end
-    end
-
     def ensure_price_greater_than_dicount_price
       # so that ut runs only when price and discounted price both are present, and we dont face nil class errors.
       if price && discount_price && price < discount_price
