@@ -12,6 +12,11 @@ class User < ApplicationRecord
     message: "invalid"
   }, allow_blank: true
 
+  has_many :orders
+  has_many :line_items, through: :orders
+
+  # has_many :line_items, -> { group 'product_id' }, through: :orders
+
   private
 
     def ensure_an_user_remains

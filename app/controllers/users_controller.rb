@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_current_user, only: [:show_user_orders, :show_user_line_items]
   # GET /users
   # GET /users.json
   def index
@@ -70,10 +70,18 @@ class UsersController < ApplicationController
     @users = User.order(:name)
   end
 
+  def show_user_line_items
+    @user_line_items = @user.line_items.page(params[:page]).per(5)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
+    end
+
+    def set_current_user
+    @user = User.find(session[:user_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   end
 
   scope '(:locale)' do
+    get '/users/orders' => 'users#show_user_orders'
+    get '/users/line_items' => 'users#show_user_line_items'
+
     resources :users
 
     resources :products do
