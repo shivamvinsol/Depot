@@ -1,3 +1,4 @@
+<% if @user.orders.present? %>
 <table border="1">
   <tr>
     <th> Items </th>
@@ -12,8 +13,9 @@
         <% end %>
       </td>
       <td>
-        <%= order.line_items.to_a.sum { |line_item| line_item.total_price } %>
+        <%= order.total_price %>
       </td>
     </tr>
   <% end %>
 </table>
+<% end %>

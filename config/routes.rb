@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       get :who_bought, on: :member
     end
 
+    resources :categories
+
     resources :admin
     resources :orders
     resources :line_items

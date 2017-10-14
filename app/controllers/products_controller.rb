@@ -1,20 +1,14 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
-  # def who_bought
-  #   @product = Product.find(params[:id])
-  #   @latest_order = @product.orders.order(:updated_at).last
-  #   if stale?(@latest_order)
-  #     respond_to do |format|
-  #       format.atom
-  #     end
-  #   end
-  # end
-
   # GET /products
   # GET /products.json
   def index
     @products = Product.all
+    respond_to do |format|
+      format.json { render json: @products.select(:title, :category) }
+      format.html { render :index }
+    end
   end
 
   # GET /products/1
@@ -25,6 +19,7 @@ class ProductsController < ApplicationController
   # GET /products/new
   def new
     @product = Product.new
+    @categories = Category.pluck(:name, :id)
   end
 
   # GET /products/1/edit
@@ -41,7 +36,7 @@ class ProductsController < ApplicationController
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
         format.json { render :show, status: :created, location: @product }
       else
-        format.html { render :new }
+        format.html { render 'new' } # if render new, @ categories doesn't get SET, NIL CLASS ERROR
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -84,6 +79,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:title, :description, :image_url, :price, :discount_price, :enabled, :permalink)
+      params.require(:product).permit(:title, :description, :image_url, :price, :discount_price, :enabled, :permalink, :category_id)
     end
 end

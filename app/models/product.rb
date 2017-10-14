@@ -1,29 +1,35 @@
-class UrlValidator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
-    unless value =~ /\.(gif|jpg|png)\Z/i
-      record.errors[attribute] << "is not valid"
-    end
-  end
-end
+#FIXED FIXME: move this to seperate file in app/validators so that it can be used in other classes too
+require_relative '../validators/url_validator.rb'
 
 class Product < ApplicationRecord
   has_many :line_items, dependent: :restrict_with_error
   has_many :carts, through: :line_items
+
+  belongs_to :category, counter_cache: :count # for parent need callback
   before_validation :set_title, :set_discount_price
 
-
-  validates :title, :description, :image_url, :price, presence: true
+  validates :title, :image_url, :price, presence: true
   validates :price, numericality: { greater_than_or_equal_to: :discount_price },
             allow_blank: true
   validates :title, uniqueness: true
   validates :image_url, url: true, allow_blank: true
-  validates :description, length: { in: 5..10 }, allow_blank: true
+  #fixed FIXME:
+  validate :description, :ensure_word_count_in_range
   validate :price,  :ensure_price_greater_than_dicount_price
   validates :discount_price, numericality: true, allow_blank: true
-  validates :permalink, uniqueness: true, format: {
-    with: /\A(([a-z0-9])+-){2,}([a-z0-9])+\Z/i
-  }
+  validates :category_id, presence: { message: "should be selected" }
 
+#FIXED FIXME: ABC vs abc
+  validates :permalink, uniqueness: { case_sensitive: false }, format: {
+    #FIXED FIXME: config/initializers/constant.rb REGEXP[:permalink] = //
+    #FIXED FIXME: Read about initializers directory and files in this directory. what special it has
+    with: REGEXP[:permalink]
+  }
+# FIXME: user validates length, use tokanizer option
+
+  scope :enabled, -> { where enabled: true } # scope for enabled products
+
+  after_create :increment_count
 
   def self.latest
     Product.order(:updated_at).last
@@ -31,19 +37,39 @@ class Product < ApplicationRecord
 
   private
     def ensure_price_greater_than_dicount_price
-      # so that ut runs only when price and discounted price both are present, and we dont face nil class errors.
+      # so that it runs only when price and discounted price both are present, and we dont face nil class errors.
       if price && discount_price && price < discount_price
         errors.add(:price, "Can't be lower than discounted price")
       end
     end
 
+    def ensure_word_count_in_range
+      unless description.scan(/\w+/).count.between?(5, 10)
+        errors.add(:description, "should be between 5-10 words")
+      end
+    end
+
     def set_title
-      self.title = 'abc' if title.empty?
+      if title.blank?
+        self.title = 'abc'
+      end
+      #FIXED FIXME: prefer to use blank? and present? instead of == "" or empty? or nil? read the difference
+      # self.title = 'abc' if title.empty?
+      #FIXED FIXME: avoid inline if statements
     end
 
     def set_discount_price
-      if discount_price.nil?
-        self.discount_price = self.price unless  price.nil?
+      #fixed FIXME: use single if statement
+      if discount_price.blank? && price.present?
+        self.discount_price = self.price
       end
     end
+
+    def increment_count
+      parent_category_id = Category.find(self.category_id).parent_category_id
+      if parent_category_id.present?
+        Category.increment_counter(:count, parent_category_id)
+      end
+    end
+
 end

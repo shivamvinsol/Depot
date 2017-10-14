@@ -1,0 +1,21 @@
+<%= form_for @category do |f|%>
+  <div>
+    <% if @category.errors.any? %>
+      <%= pluralize(@category.errors.count, 'error') %>
+      <ul>
+        <% @category.errors.full_messages.each do |msg| %>
+          <li> <%= msg %> </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,3 +1,4 @@
+<% if @user.line_items.present? %>
 <table border="1">
   <tr>
     <th> Line Item </th>
@@ -12,3 +13,4 @@
 </table>
 
 <p><%= paginate @user_line_items %></p>
+<% end %>

@@ -1,0 +1,20 @@
+<% if @categories.present? %>
+  <table>
+    <tr>
+      <th> Name </th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+    <% @categories.each do |category| %>
+      <tr>
+        <td> <%= category.name %> </td>
+        <td> <%= link_to 'Show', category_path(category) %> </td>
+        <td> <%= link_to 'Edit', edit_category_path(category) %> </td>
+        <td> <%= link_to 'Delete', category_path(category), method: :delete %> </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<%= link_to 'New Category', new_category_path %>

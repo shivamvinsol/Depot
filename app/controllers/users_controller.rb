@@ -81,11 +81,12 @@ class UsersController < ApplicationController
     end
 
     def set_current_user
-    @user = User.find(session[:user_id])
+      @user = User.find(session[:user_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:name, :password, :password_confirmation, :email)
+      params.require(:user).permit(:name, :password, :password_confirmation, :email,
+                                    address_attributes: [:state, :country, :city, :pincode])
     end
 end

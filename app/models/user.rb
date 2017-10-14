@@ -7,13 +7,17 @@ class User < ApplicationRecord
   after_create :send_welcome_email
 
   validates :email, presence: true
-  validates :email, uniqueness: true, format: {
-    with: /\A[0-9a-z_\.]{2,20}@[0-9a-z]{2,20}(\.[a-z]{2,3}){1,2}\Z/i, # abc@gmail.com / ab@gmail.co.in
-    message: "invalid"
-  }, allow_blank: true
+  #fixed FIXME: ignore case in uniqueness
+  validates :email, uniqueness: { case_sensitive: true },
+            format: { with: REGEXP[:email], message: "invalid" }, allow_blank: true
 
   has_many :orders
   has_many :line_items, through: :orders
+  has_one :address
+  accepts_nested_attributes_for :address
+
+  validates_associated :address
+  validates :address, presence: true
 
   # has_many :line_items, -> { group 'product_id' }, through: :orders
 
@@ -26,11 +30,12 @@ class User < ApplicationRecord
     end
 
     def send_welcome_email
-      NewUserNotifier.welcome(self).deliver
+      WelcomeUser.welcome(self).deliver
     end
 
     def check_not_admin_account
-      if self.email =~ /admin@depot.com/i
+      #fixed FIXME: don't use regexp
+      if self.email.downcase == "admin@depot.com"
         raise "Admin account, Restricited Access!"
       end
     end
