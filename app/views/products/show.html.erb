@@ -11,8 +11,12 @@
 </p>
 
 <p>
-  <strong>Image url:</strong>
-  <%= @product.image_url %>
+  <strong>Image:</strong>
+  <% if @product.image.present? %>
+    <%= image_tag url_for(action: 'show_image', id: @product.id), height: "500px", width: "500px" %>
+  <% else %>
+    Image not available
+  <% end %>
 </p>
 
 <p>

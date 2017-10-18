@@ -15,6 +15,7 @@ class UsersController < ApplicationController
   # GET /users/new
   def new
     @user = User.new
+    @user.build_address
   end
 
   # GET /users/1/edit
@@ -25,6 +26,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    # no need to save address?
 
     respond_to do |format|
       if @user.save
@@ -70,8 +72,13 @@ class UsersController < ApplicationController
     @users = User.order(:name)
   end
 
+  def show_user_orders
+    render layout: 'shivam'
+  end
+
   def show_user_line_items
     @user_line_items = @user.line_items.page(params[:page]).per(5)
+    render layout: 'shivam'
   end
 
   private

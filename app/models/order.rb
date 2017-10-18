@@ -6,7 +6,9 @@ class Order < ApplicationRecord
 
   belongs_to :user
 
-  scope :by_date, ->(from = Time.now.midnight.to_s(:db), to = Time.now.end_of_day.to_s(:db)) { where created_at: from..to }
+
+  # FIXME:: time.now vs time.current
+  scope :by_date, ->(from = Time.current.midnight, to = Time.current.end_of_day) { where created_at: from..to }
 
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|

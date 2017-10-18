@@ -54,3 +54,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # pagination gem
 gem 'kaminari'
+
+# file upload
+gem 'paperclip', '~> 5.0.0'

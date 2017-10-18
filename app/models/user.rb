@@ -13,11 +13,12 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :line_items, through: :orders
+
   has_one :address
   accepts_nested_attributes_for :address
 
-  validates_associated :address
-  validates :address, presence: true
+  # validates_associated :address # automatically validated, how?
+  # validates :address, presence: true
 
   # has_many :line_items, -> { group 'product_id' }, through: :orders
 

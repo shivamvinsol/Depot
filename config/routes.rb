@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     get '/users/orders' => 'users#show_user_orders'
     get '/users/line_items' => 'users#show_user_line_items'
 
+    get '/products/show_image' => 'user@show_image'
+
     resources :users
 
     resources :products do

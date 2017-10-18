@@ -2,17 +2,23 @@
 require_relative '../validators/url_validator.rb'
 
 class Product < ApplicationRecord
+  # attr_accessor :image
+
   has_many :line_items, dependent: :restrict_with_error
   has_many :carts, through: :line_items
+  has_one :image, dependent: :delete
+  accepts_nested_attributes_for :image
 
   belongs_to :category, counter_cache: :count # for parent need callback
   before_validation :set_title, :set_discount_price
 
-  validates :title, :image_url, :price, presence: true
+  validates :title, :image, :price, presence: true
   validates :price, numericality: { greater_than_or_equal_to: :discount_price },
             allow_blank: true
   validates :title, uniqueness: true
-  validates :image_url, url: true, allow_blank: true
+
+  # validates :image_url, url: true, allow_blank: true # changed to image (file)
+
   #fixed FIXME:
   validate :description, :ensure_word_count_in_range
   validate :price,  :ensure_price_greater_than_dicount_price
@@ -66,7 +72,7 @@ class Product < ApplicationRecord
     end
 
     def increment_count
-      parent_category_id = Category.find(self.category_id).parent_category_id
+      parent_category_id = Category.find(category_id).parent_category_id
       if parent_category_id.present?
         Category.increment_counter(:count, parent_category_id)
       end
