@@ -8,8 +8,8 @@
   <% @products.each do |product| %>
     <% cache ['entry', product] do %>
       <div class="entry">
-        <% if product.image.present? %>
-          <%= image_tag url_for(controller: 'products', action: 'show_image', id: product.id), height: "50px", width: "50px" %>
+        <% if product.images.present? %>
+          <%= image_tag('/images/' + product.images.first.name, height: "60px", width: "60px") %>
         <% else %>
           Image not available
         <% end %>

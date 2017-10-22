@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     get '/users/orders' => 'users#show_user_orders'
     get '/users/line_items' => 'users#show_user_line_items'
 
-    get '/products/show_image' => 'user@show_image'
+    get '/products/show_image' => 'products#show_image'
 
     resources :users
 
@@ -21,7 +21,9 @@ Rails.application.routes.draw do
 
     resources :categories
 
+    get 'admin/reports' => 'admin#show_reports'
     resources :admin
+
     resources :orders
     resources :line_items
     resources :carts

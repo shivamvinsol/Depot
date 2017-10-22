@@ -1,0 +1,24 @@
+<%= javascript_include_tag "main.js" %>
+
+<h1> Orders (Last 5 days) </h1>
+
+<table border="1">
+  <tr>
+    <th> Items </th>
+    <th> Total Price </th>
+  </tr>
+  <%= render @orders %>
+</table>
+
+<hr />
+Select Orders between these dates-
+<%= form_tag do %>
+  <%= label :from_date, 'From' %>
+  <%= select_date Date.today %>
+
+  <%= label :to_date, 'To' %>
+  <%= select_date Date.today %>
+
+  <br /> <br />
+  <%= submit_tag 'Apply' %>
+<% end %>

@@ -2,17 +2,19 @@
 require_relative '../validators/url_validator.rb'
 
 class Product < ApplicationRecord
-  # attr_accessor :image
+  attr_accessor :image1, :image2, :image3
 
   has_many :line_items, dependent: :restrict_with_error
   has_many :carts, through: :line_items
-  has_one :image, dependent: :delete
-  accepts_nested_attributes_for :image
+
+  has_many :images, dependent: :delete_all
+  accepts_nested_attributes_for :images
+  validates_associated :images
 
   belongs_to :category, counter_cache: :count # for parent need callback
   before_validation :set_title, :set_discount_price
 
-  validates :title, :image, :price, presence: true
+  validates :title, :price, presence: true
   validates :price, numericality: { greater_than_or_equal_to: :discount_price },
             allow_blank: true
   validates :title, uniqueness: true
