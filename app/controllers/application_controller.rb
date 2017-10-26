@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     def set_i18n_locale_from_params
       if session[:user_id]
         @user = User.find(session[:user_id])
-        I18n.locale = @user.language
+        # I18n.locale = @user.language
       else
         if params[:locale]
           if I18n.available_locales.map(&:to_s).include?(params[:locale])
