@@ -1,0 +1,25 @@
+<% if notice %>
+<p id="notice"> <%= notice %> </p>
+<% end %>
+
+<h1> <%= t('.title_html') %> </h1>
+
+<% cache ['store', Product.latest] do %>
+  <% @products.each do |product| %>
+    <% cache ['entry', product] do %>
+      <div class="entry">
+        <% if product.images.present? %>
+          <%= image_tag('/images/' + product.images.first.name, height: "60px", width: "60px") %>
+        <% else %>
+          Image not available
+        <% end %>
+        <h3> <%= product.title %> </h3>
+        <%= sanitize(product.description) %>
+        <div class="price_line">
+          <span class="price"> <%= number_to_currency(product.price) %> </span>
+          <%= button_to t('.add_html'), line_items_path(product_id: product), remote: true %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

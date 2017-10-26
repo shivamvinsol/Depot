@@ -1,0 +1,36 @@
+<%= javascript_include_tag "slider" %>
+<% if notice %>
+<p id="notice"><%= notice %></p>
+<% end %>
+
+<p>
+  <strong>Title:</strong>
+  <%= @product.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @product.description %>
+</p>
+
+<p>
+  <strong>Images:</strong>
+  <div id="slider">
+    <% if @product.images.present? %>
+      <% @product.images.each do |image| %>
+        <%= image_tag('/images/' + image.name, height: "400px", width: "400px", data: { name: 'image-slide' }) %>
+      <% end %>
+      <%# image_tag url_for(action: 'show_image', id: @product.id), height: "500px", width: "500px" %>
+    <% else %>
+      Image not available
+    <% end %>
+</div>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @product.price %>
+</p>
+
+<%= link_to 'Edit', edit_product_path(@product) %> |
+<%= link_to 'Back', products_path %>

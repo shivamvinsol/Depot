@@ -1,0 +1,28 @@
+<%= javascript_include_tag "main.js" %>
+<%= stylesheet_link_tag "main.css" %>
+
+<h1> Orders (Last 5 days) </h1>
+
+<table border="1">
+  <tr>
+    <th> Items </th>
+    <th> Total Price </th>
+  </tr>
+  <%= render @orders %>
+</table>
+
+<hr />
+Select Orders between these dates-
+<%= form_for :order, data: { name: 'order-form' } do %>
+  <%= label :from_date, 'From' %>
+  <%= date_field :from, :date, value: Date.current, data: { name: 'order_from_date' } %>
+
+  <%= label :to_date, 'To' %>
+  <%= date_field :to, :date, value: Date.current, data: { name: 'order_to_date' } %>
+
+  <br /> <br />
+  <%= submit_tag 'Apply', data: { name: 'submit-button', disable_with: false  } %>
+<% end %>
+
+<br />
+<div data-name="show-orders"></div>

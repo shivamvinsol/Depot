@@ -1,0 +1,13 @@
+<div>
+ <strong> <%= "#{t('greeting')} #{@user.name}" %> </strong>,
+</div>
+<p> <%= t('.intro') %> </p>
+<table>
+  <tr>
+      <th> <%= t('.products') %> </th>
+      <th> <%= t('.total') %> </th>
+  </tr>
+  <%= render @orders %>
+</table>
+<hr/>
+<%= "#{t('.summary')}" %>

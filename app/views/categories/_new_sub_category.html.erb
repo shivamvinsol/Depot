@@ -1,0 +1,14 @@
+<%= form_for Category.new do |f|%>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.hidden_field :parent_category_id, value: @category.id %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

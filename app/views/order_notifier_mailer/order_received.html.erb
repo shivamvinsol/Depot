@@ -1,0 +1,29 @@
+<div>
+ <strong> <%= "#{t('greeting')} #{@order.name}" %> </strong>,
+</div>
+<p> <%= t('.intro') %> </p>
+<div>
+  <%= t('.summary') %>
+</div>
+<table>
+  <tr>
+      <th></th>
+      <th> <%= t('.name') %> </th>
+      <th> <%= t('.price') %> </th>
+      <th> <%= t('.quantity') %> </th>
+      <th> <%= t('.total_price') %> </th>
+  </tr>
+  <% @line_items.each do |line_item| %>
+    <tr>
+
+      <td> <%= image_tag attachments[line_item.product.title + "." + line_item.product.images.first.name.split('.').last].url,
+                               height: '20px', width: '20px' %> </td>
+      <td> <%= line_item.product.title %> </td>
+      <td> <%= line_item.product.price %> </td>
+      <td> <%= line_item.quantity %> </td>
+      <td> <%= line_item.quantity * line_item.product.price %> </td>
+    </tr>
+  <% end %>
+</table>
+<hr/>
+<%= "#{t('.footer')} #{@order.total_price}" %>

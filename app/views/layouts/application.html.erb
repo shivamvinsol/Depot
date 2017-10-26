@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Online Book Store </title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="<%= controller.controller_name%>">
+    <div id="banner">
+      <%= form_tag store_path, class: 'locale' do %>
+      <%= select_tag 'set_locale', options_for_select(LANGUAGES, I18n.locale.to_s),
+                                                      onchange: 'this.form.submit()' %>
+      <%= submit_tag 'submit' %>
+      <%= javascript_tag "$('.locale input').hide()" %>
+      <% end %>
+
+      <%= image_tag("logo.jpg") %>
+      <%= @page_title || t('.title')%>
+    </div>
+    <div id="columns">
+      <div id="side">
+        <div>
+          <%= Time.now.to_date %>
+          <%= Time.now.strftime("%I:%M%p") %>
+        </div>
+
+        <% if @cart %>
+        <div id="cart">
+          <%= render(@cart) %>
+        </div>
+        <% end %>
+
+        <ul>
+          <li> <a href="/"> <%= t('.home') %> </a> </li>
+          <li> <a href=""> <%= t('.questions') %> </a> </li>
+          <li> <a href=""> <%= t('.news') %> </a> </li>
+          <li> <a href=""> <%= t('.contact') %> </a> </li>
+        </ul>
+
+        <% if session[:user_id] %>
+        <ul>
+          <li> <%= link_to 'Orders', orders_path %> </li>
+          <li> <%= link_to 'Products', products_path %> </li>
+          <li> <%= link_to 'Users', users_path %> </li>
+          <li> <%= link_to 'Categories', categories_path %> </li>
+        </ul>
+
+        <%= button_to 'Logout', logout_path, method: :delete %>
+        <% end %>
+      </div>
+    </div>
+    <div id="main">
+      <%= yield %>
+    </div>
+    <div>
+      <hr/>
+      Your ip is <%= request.remote_ip %>
+      <br/>
+      Page Views <%= get_page_views %>
+    </br/>
+    </div>
+  </body>
+</html>

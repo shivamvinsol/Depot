@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+  <footer>
+    Contact Us-
+    <%= link_to image_tag('/fb.png', height: '20px', width: '20px' ), "https://www.fb.com" %>
+    <%= link_to 'Website', 'https://www.shivamjain.com' %>
+  </footer>
+</html>

@@ -1,0 +1,11 @@
+<tr>
+  <td> <%= link_to category.name, category_products_path(category.id) %> </td>
+  <td>
+     <% if category.parent_category %>
+       <%= link_to category.parent_category.name, category_products_path(category.parent_category.id) %>
+     <% else %>
+       None
+     <% end %>
+  </td>
+  <td> <%= category.count || 0 %> </td>
+</tr>
