@@ -3,7 +3,7 @@
 
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy, :show_image]
-  # skip_before_action :authorize, only: :show_image
+  before_action :delete_uploaded_images, only: :destroy
 
   # GET /products
   # GET /products.json
@@ -38,10 +38,11 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-    get_product_images
+    validate_product_images
 
     respond_to do |format|
       if @product.save
+        upload_product_images
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
         format.json { render :show, status: :created, location: @product }
       else
@@ -49,16 +50,15 @@ class ProductsController < ApplicationController
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
-
   end
 
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json
   def update
-    get_product_images
-
+    validate_product_images
     respond_to do |format|
       if @product.update(product_params)
+        upload_product_images
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }
       else
@@ -82,10 +82,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  def category_products
-    byebug
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product
@@ -97,19 +93,35 @@ class ProductsController < ApplicationController
       params.require(:product).permit(:title, :description, :image1, :image2, :image3, :price, :discount_price, :enabled, :permalink, :category_id)
     end
 
-    def get_product_images
+    def validate_product_images
+      @images = []
       3.times do |index|
         image = params[:product]["image#{index + 1}"]
         if image.present?
-          # this will upload image and save link
-          if %w(image/jpeg image/png image/gif).include?(image.content_type)
-            image_name = Time.current.strftime("%Y%m%d%H%M%S") + image.original_filename
-            File.open(Rails.root.join('public', 'images', image_name), 'wb') do |file|
-              file.write(image.read)
-            end
-          end
-          @product.images.build(name: image_name, content_type: image.content_type)
+          @product.images.build(name: image.original_filename, content_type: image.content_type)
+          @images << image
         end
+      end
+    end
+
+    def upload_product_images
+      product_image_path = "#{Rails.root}/public/images/#{@product.id}"
+      Dir.mkdir(product_image_path) unless Dir.exist?(product_image_path)
+
+      @images.each do |image|
+        if %w(image/jpeg image/png image/gif).include?(image.content_type)
+          File.open(product_image_path + "/#{image.original_filename}", 'wb') do |file|
+            file.write(image.read)
+          end
+        end
+      end
+    end
+
+    def delete_uploaded_images
+      product_image_path = "#{Rails.root}/public/images/#{@product.id}"
+      # SAFE TO USE??
+      if Dir.exist?(product_image_path) && @product.present?
+        FileUtils.rm_rf(product_image_path)
       end
     end
 end

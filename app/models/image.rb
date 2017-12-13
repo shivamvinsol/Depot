@@ -1,6 +1,7 @@
 class Image < ApplicationRecord
   belongs_to :product, required: false
-  validates :content_type, inclusion: { in: %w(image/jpeg image/png image/gif) }
 
-  # validates :name, format: { with: /\.(jpg|png|gif)\Z/, message: 'not a valid image' }
+  validates :content_type, inclusion: { in: %w(image/jpeg image/png image/gif), message: "not valid image file" }
+  # FIXME: jquery handle??
+  # validates :name, uniqueness: { scope: :product_id, case_sensitive: false, message: "should be unique" }, allow_blank: true
 end

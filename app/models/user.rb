@@ -4,7 +4,9 @@ class User < ApplicationRecord
   before_destroy :check_not_admin_account
   before_update :check_not_admin_account
   after_destroy :ensure_an_user_remains
-  after_create :send_welcome_email
+
+  # send mails after commit, least priority
+  after_commit :send_welcome_email, on: :create
 
   validates :email, presence: true
   #fixed FIXME: ignore case in uniqueness
@@ -18,6 +20,9 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :address
 
   has_many :ratings
+
+  enum language: ['en', 'es', 'hi']
+  validates :language, inclusion: { in: languages.keys }
 
   # validates_associated :address # automatically validated, how?
   # validates :address, presence: true
@@ -33,7 +38,7 @@ class User < ApplicationRecord
     end
 
     def send_welcome_email
-      WelcomeUser.welcome(self).deliver
+      UserMailer.welcome(self).deliver
     end
 
     def check_not_admin_account

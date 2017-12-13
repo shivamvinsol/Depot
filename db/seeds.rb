@@ -5,6 +5,3 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-
-Product.create!(title: 'Programming Ruby', description: %{<p> Book to teach Rails </p>}, image_url: 'rails.png',
-    price: 30.33 )

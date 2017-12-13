@@ -5,20 +5,19 @@ class ApplicationController < ActionController::Base
   before_action :check_inactivity_time
   around_action :get_response_time
 
-  protected
+  private
 
     def set_i18n_locale_from_params
-      if session[:user_id]
-        @user = User.find(session[:user_id])
-        # I18n.locale = @user.language
+      if params[:locale]
+        if I18n.available_locales.map(&:to_s).include?(params[:locale])
+          I18n.locale = params[:locale]
+        else
+          flash.now[:notice] = "#{params[:locale]} translation not available"
+          logger.error flash.now[:notice]
+        end
       else
-        if params[:locale]
-          if I18n.available_locales.map(&:to_s).include?(params[:locale])
-            I18n.locale = params[:locale]
-          else
-            flash.now[:notice] = "#{params[:locale]} translation not available"
-            logger.error flash.now[:notice]
-          end
+        if session[:user_id]
+          I18n.locale = User.find(session[:user_id]).language
         end
       end
     end

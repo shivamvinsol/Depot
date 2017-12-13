@@ -43,7 +43,6 @@ class OrdersController < ApplicationController
       if @order.save
         # Cart.destroy(session[:cart_id]) # this deleted all line_items and products from cart
         session[:cart_id] = nil
-        OrderNotifierMailer.order_received(@order).deliver
         format.html { redirect_to store_url, notice: I18n.t('.thanks') }
         format.json { render action: 'show', status: :created, location: @order }
       else

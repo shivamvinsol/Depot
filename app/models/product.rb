@@ -9,6 +9,7 @@ class Product < ApplicationRecord
 
   has_many :images, dependent: :delete_all
   accepts_nested_attributes_for :images
+  validates :images, presence: true
   validates_associated :images
 
   has_many :ratings
@@ -16,7 +17,7 @@ class Product < ApplicationRecord
   belongs_to :category, counter_cache: :count # for parent need callback
   before_validation :set_title, :set_discount_price
 
-  validates :title, :price, :image1, presence: true
+  validates :title, :price, presence: true
   validates :price, numericality: { greater_than_or_equal_to: :discount_price },
             allow_blank: true
   validates :title, uniqueness: true
@@ -38,7 +39,9 @@ class Product < ApplicationRecord
 # FIXME: user validates length, use tokanizer option
 
   scope :enabled, -> { where enabled: true } # scope for enabled products
+  validate :ensure_no_images_have_same_name, on: [:create, :update]
 
+  after_validation :ensure_not_more_than_three_images
   after_create :increment_count
 
   def self.latest
@@ -79,6 +82,20 @@ class Product < ApplicationRecord
       parent_category_id = Category.find(category_id).parent_category_id
       if parent_category_id.present?
         Category.increment_counter(:count, parent_category_id)
+      end
+    end
+
+    def ensure_not_more_than_three_images
+      if images.count > 3
+        errors[:image] << "can be maximum 3"
+      end
+    end
+
+    def ensure_no_images_have_same_name
+      # pluck not working on unsaved objects
+      image_names = images.map(&:name)
+      if image_names.uniq.length != image_names.length
+        errors[:image] << "should have unique names"
       end
     end
 

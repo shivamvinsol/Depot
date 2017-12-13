@@ -6,9 +6,10 @@ class Order < ApplicationRecord
 
   belongs_to :user
 
+  after_commit :send_order_confirmation_mail
 
   # FIXME:: time.now vs time.current
-  scope :by_date, ->(from = Time.current.midnight, to = Time.current.end_of_day) { where created_at: from..to }
+  scope :by_date, ->(from = Time.current, to = Time.current) { where created_at: from.to_datetime.midnight..to.to_datetime.end_of_day }
 
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|
@@ -19,5 +20,9 @@ class Order < ApplicationRecord
 
   def total_price
     line_items.to_a.sum { |line_item| line_item.total_price }
+  end
+
+  def send_order_confirmation_mail
+    OrderMailer.confirmed(self).deliver
   end
 end

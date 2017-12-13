@@ -61,8 +61,8 @@ en:
 
   thanks: "Thanks for your order"
 
-  order_notifier_mailer:
-    order_received:
+  order_mailer:
+    confirmed:
       subject: "Order Confirmation"
       intro: "We have recieved your order and we'll ship it soon."
       name: "name"
@@ -72,7 +72,6 @@ en:
       footer: "Your order total is -"
       summary: "Here is your order details"
 
-  consolidated_order_mailer:
     all_user_orders:
       subject: "Consolidated Order Summary"
       intro: "This is summary of all orders you have placed with us-"
@@ -82,3 +81,5 @@ en:
 
 
   greeting: 'hi'
+
+  invalid_credentials: 'Please check your name/password'

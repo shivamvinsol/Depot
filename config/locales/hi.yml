@@ -1,6 +1,6 @@
 hi:
-  order_notifier_mailer:
-    order_received:
+  order_mailer:
+    confirmed:
       subject: "आदेश की पुष्टि"
       intro: 'हमने आपका ऑर्डर प्राप्त कर लिया है और हम इसे जल्द ही भेज देंगे।'
       name: 'नाम'
@@ -10,7 +10,6 @@ hi:
       footer: 'कुल आदेश राशि'
       summary: 'ये आपका ऑर्डर विवरण है'
 
-  consolidated_order_mailer:
     all_user_orders:
       subject: "समेकित आदेश सारांश"
       intro: "यह आपके द्वारा रखे गए सभी आदेशों का सारांश है"
@@ -18,6 +17,47 @@ hi:
       total: "कुल रकम"
       summary: "हमारे साथ खरीदारी करने के लिए धन्यवाद"
 
+  activerecord:
+    errors:
+      messages:
+        inclusion: 'सूची का हिस्सा नहीं है'
+        blank: 'रिक्त नहीं हो सकता'
+
+    attributes:
+      category:
+        name: 'नाम'
+      user:
+        email: 'ईमेल'
+        name: 'नाम'
+      address:
+        state: 'राज्य'
+        city: 'शहर'
+        country: 'देश'
+        pincode: 'पिन कोड'
+
+  store:
+    index:
+      title_html: 'सूची'
+      add_html: 'कार्ट में डालें'
+
+  carts:
+    cart:
+      title: 'आपका कार्ट'
+      checkout: 'चेक आउट'
+      empty: 'खाली'
+
+  orders:
+    new:
+      legend: 'अपना विवरण दर्ज करें'
+    form:
+      name: 'नाम'
+      address_html: 'पता'
+      email: 'ईमेल'
+      pay_type: 'भुगतान प्रकार'
+      pay_prompt_html: 'भुगतान प्रकार चुनें'
+      submit: 'जमा करें'
 
   greeting: 'नमस्कार'
   thanks: 'धन्यवाद'
+
+  invalid_credentials: 'कृपया अपने लॉगिन क्रेडेंशियल्स की जांच करें'

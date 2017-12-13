@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025121716) do
+ActiveRecord::Schema.define(version: 20171027135445) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "state"
@@ -85,9 +85,9 @@ ActiveRecord::Schema.define(version: 20171025121716) do
   create_table "ratings", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "product_id"
-    t.integer  "rating"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.decimal  "rating",     precision: 2, scale: 1
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.index ["product_id"], name: "index_ratings_on_product_id"
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20171025121716) do
     t.datetime "updated_at",                       null: false
     t.string   "email"
     t.string   "role",            default: "user"
-    t.string   "language",        default: "en"
+    t.integer  "language",        default: 0
   end
 
 end

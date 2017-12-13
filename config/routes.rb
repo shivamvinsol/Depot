@@ -4,32 +4,37 @@ Rails.application.routes.draw do
     match "*url" => redirect('/404'), via: :all
   end
 
-  get 'admin' => 'admin#index'
-
-  controller :sessions do
-    get 'login' => :new
-    post 'login' => :create
-    delete 'logout' => :destroy
-  end
-
   scope '(:locale)' do
+
+    get 'admin' => 'admin#index'
+
+    controller :sessions do
+      get 'login' => :new
+      post 'login' => :create
+      delete 'logout' => :destroy
+    end
 
     get '/users/orders' => 'users#show_user_orders'
     get '/users/line_items' => 'users#show_user_line_items'
+
     # FIXME: same action as /users/orders for /my-orders
     # get '/my-orders' =>   redirect('/users/orders')
+
+    # get '/users/ratings' => 'ratings#index', as: 'user_ratings_path'
+
     get 'my-items' => redirect('users/line_items')
-    get 'admin/reports' => 'admin#show_reports'
+    get 'admin/reports' => 'admin#show_reports', as: :admin_report
     get 'admin/categories' => 'admin#show_categories'
     get 'categories/:id/books' => 'categories#show_products', id: /\d+/, as: :category_products
     get 'categories/:id/books' => redirect('/')
 
     post 'admin/api/reports' => 'admin#get_orders_between_dates'
+    post '/api/product/rate' => 'ratings#update_or_create'
+
     resources :users
     resources :products, path: 'books' do
       get :who_bought, on: :member
     end
-
 
     resources :admin
     resources :categories

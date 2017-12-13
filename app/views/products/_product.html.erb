@@ -1,7 +1,7 @@
 <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
 <td>
   <% if product.images.present? %>
-    <%= image_tag('/images/' + product.images.first.name, height: "40px", width: "40px") %>
+    <%= image_tag("/images/#{product.id}/" + product.images.first.name, height: "40px", width: "40px") %>
   <% else %>
     Image not available
   <% end %>

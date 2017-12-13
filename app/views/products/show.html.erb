@@ -18,7 +18,7 @@
   <div id="slider">
     <% if @product.images.present? %>
       <% @product.images.each do |image| %>
-        <%= image_tag('/images/' + image.name, height: "400px", width: "400px", data: { name: 'image-slide' }) %>
+        <%= image_tag("/images/#{@product.id}/" + image.name, height: "400px", width: "400px", data: { name: 'image-slide' }) %>
       <% end %>
       <%# image_tag url_for(action: 'show_image', id: @product.id), height: "500px", width: "500px" %>
     <% else %>
